@@ -10,7 +10,7 @@ int bf_vm_init(bf_vm *vm)
     vm->data = (cell_t *) malloc(sz);
     memset(vm->data, 0, sz);
     // FIXME: implement
-    // vm->jit_context = jit_context_create();
+    vm->jit_context = jit_context_create();
     return 0;
 }
 
@@ -34,4 +34,10 @@ int bf_vm_run(bf_vm *vm)
     // FIXME: implement
     // jit_function_apply(vm->jit_function, args, NULL);
     return 0;
+}
+
+jit_context_t jit_context_create()
+{
+    jit_context_t context = (jit_context_t) malloc (sizeof(char) * MAX_CELLS);
+    return context;
 }
