@@ -11,6 +11,7 @@ int bf_vm_init(bf_vm *vm)
     memset(vm->data, 0, sz);
     // FIXME: implement
     vm->jit_context = jit_context_create();
+    vm->data_ptr = vm->data;
     return 0;
 }
 
@@ -24,6 +25,8 @@ bf_vm *bf_vm_create()
 void bf_vm_free(bf_vm *vm)
 {
     free(vm->data);
+    free(vm->jit_context);
+    free(vm->data_ptr);
     free(vm);
 }
 
@@ -38,6 +41,7 @@ int bf_vm_run(bf_vm *vm)
 
 jit_context_t jit_context_create()
 {
+    // int fd = open("jitcode", O_CREAT);
     jit_context_t context = (jit_context_t) malloc (sizeof(char) * MAX_CELLS);
     return context;
 }
