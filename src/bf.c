@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     } else {
         bf_vm *vm = bf_compile_file(argv[optind]);
         bf_vm_run(vm);
-        bf_vm_free(vm);
+        // bf_vm_free(vm);
     }
     return 0;
 }
