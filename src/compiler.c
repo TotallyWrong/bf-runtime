@@ -301,13 +301,58 @@ void bf_print_block(bf_block *container, int indent)
     }
 }
 
+void bf_vm_compile_loop_start(bf_vm *vm)
+{
+    printf("while {\n");
+}
+
+void bf_vm_compile_loop_end(bf_vm *vm)
+{
+    printf("}\n");
+}
+
+void bf_vm_compile_add(bf_vm *vm, int arg, int offset)
+{
+    printf("add %d, (%d)\n",  vm->data_ptr - vm->data, arg);
+    *(vm->data_ptr+offset) += arg;
+}
+
+void bf_vm_compile_shift(bf_vm *vm, int arg)
+{
+    printf("sft %d, (%d)\n", vm->data_ptr - vm->data, arg);
+    vm->data += arg;
+}
+
+void bf_vm_compile_put(bf_vm *vm, int offset)
+{
+    printf("put %d\n", vm->data_ptr + offset - vm->data);
+}
+
+void bf_vm_compile_get(bf_vm *vm, int offset)
+{
+    char c = getchar();
+    printf("get %d, (%d)\n", vm->data_ptr + offset - vm->data, c);
+}
+
+void bf_vm_compile_mul(bf_vm *vm, int arg, int offset)
+{
+    printf("mul %d, (%d)\n", vm->data_ptr + offset - vm->data, arg);
+    *(vm->data_ptr) *= arg;
+}
+
+void bf_vm_compile_clear(bf_vm *vm)
+{
+    printf("clr %d\n", vm->data_ptr - vm->data);
+    *(vm->data_ptr) = 0;
+}
+
 void bf_compile_block(bf_vm *vm, bf_block *container)
 {
     bf_block *block;
     BF_LIST_FOREACH(container->container, block) {
         if (block->is_loop) {
             // FIXME: implement
-            // bf_vm_compile_loop_start(vm);
+            bf_vm_compile_loop_start(vm);
         }
         if (block->is_container) {
             bf_compile_block(vm, block);
@@ -317,30 +362,29 @@ void bf_compile_block(bf_vm *vm, bf_block *container)
                 switch (op->op) {
                 case BF_ADD:
                     // FIXME: implement
-                    // bf_vm_compile_add(vm, op->arg, op->offset);
+                    bf_vm_compile_add(vm, op->arg, op->offset);
                     break;
                 case BF_SFT:
-                    // FIXME: implement
-                    // bf_vm_compile_shift(vm, op->arg);
+                    bf_vm_compile_shift(vm, op->arg);
                     break;
                 case BF_PUT:
-                    // bf_vm_compile_put(vm, op->offset);
+                    bf_vm_compile_put(vm, op->offset);
                     break;
                 case BF_GET:
-                    // bf_vm_compile_get(vm, op->offset);
+                    bf_vm_compile_get(vm, op->offset);
                     break;
                 case BF_MUL:
-                    // bf_vm_compile_mul(vm, op->arg, op->offset);
+                    bf_vm_compile_mul(vm, op->arg, op->offset);
                     break;
                 case BF_CLEAR:
-                    // bf_vm_compile_clear(vm);
+                    bf_vm_compile_clear(vm);
                     break;
                 }
             }
         }
 
         if (block->is_loop) {
-            // bf_vm_compile_loop_end(vm);
+            bf_vm_compile_loop_end(vm);
         }
     }
 }
@@ -364,7 +408,7 @@ bf_vm *bf_compile_file(const char* filename)
     bf_state_init(state); // TODO: error handling
     bf_state_read(state, filename);
     bf_program* program = bf_compile_state(state);
-    bf_optimize_program(program);
+    //bf_optimize_program(program);
 
     if (bf_options.pretty_print) {
         bf_print_program(program);

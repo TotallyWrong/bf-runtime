@@ -75,5 +75,13 @@ void bf_print_ops(bf_block* block, int indent);
 void bf_print_block(bf_block* container, int indent);
 void bf_print_program(bf_program* program);
 
+void bf_vm_compile_add(bf_vm *vm, int arg, int offset);
+void bf_vm_compile_shift(bf_vm *vm, int arg);
+void bf_vm_compile_get(bf_vm *vm, int offset);
+void bf_vm_compile_put(bf_vm *vm, int offset);
+void bf_vm_compile_mul(bf_vm *vm, int arg, int offset);
+void bf_vm_compile_clear(bf_vm *vm);
+void bf_vm_compile_loop_start(bf_vm *vm);
+void bf_vm_compile_loop_end(bf_vm *vm);
 
 #endif
