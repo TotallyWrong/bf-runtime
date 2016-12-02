@@ -16,6 +16,12 @@ void bf_state_init(bf_state *state)
     state->code = 0;
     state->code_size = 0;
     state->fd = 0;
+    // Error handle not sure correct or not
+    if (state->fd || state->code_size || state->code|| state->filename) {
+        printf("Error state  element initialize fail \n ");
+        exit(-1);
+
+    }
 }
 
 bf_state *bf_create_state()
@@ -313,36 +319,36 @@ void bf_vm_compile_loop_end(bf_vm *vm)
 
 void bf_vm_compile_add(bf_vm *vm, int arg, int offset)
 {
-    printf("add %d, (%d)\n",  vm->data_ptr - vm->data, arg);
+    printf("add %ld, (%d)\n",  vm->data_ptr - vm->data, arg);
     *(vm->data_ptr+offset) += arg;
 }
 
 void bf_vm_compile_shift(bf_vm *vm, int arg)
 {
-    printf("sft %d, (%d)\n", vm->data_ptr - vm->data, arg);
+    printf("sft %ld, (%d)\n", vm->data_ptr - vm->data, arg);
     vm->data += arg;
 }
 
 void bf_vm_compile_put(bf_vm *vm, int offset)
 {
-    printf("put %d\n", vm->data_ptr + offset - vm->data);
+    printf("put %ld\n", vm->data_ptr + offset - vm->data);
 }
 
 void bf_vm_compile_get(bf_vm *vm, int offset)
 {
     char c = getchar();
-    printf("get %d, (%d)\n", vm->data_ptr + offset - vm->data, c);
+    printf("get %ld, (%d)\n", vm->data_ptr + offset - vm->data, c);
 }
 
 void bf_vm_compile_mul(bf_vm *vm, int arg, int offset)
 {
-    printf("mul %d, (%d)\n", vm->data_ptr + offset - vm->data, arg);
+    printf("mul %ld, (%d)\n", vm->data_ptr + offset - vm->data, arg);
     *(vm->data_ptr) *= arg;
 }
 
 void bf_vm_compile_clear(bf_vm *vm)
 {
-    printf("clr %d\n", vm->data_ptr - vm->data);
+    printf("clr %ld\n", vm->data_ptr - vm->data);
     *(vm->data_ptr) = 0;
 }
 
@@ -405,7 +411,7 @@ bf_vm* bf_compile_program(bf_program* program)
 bf_vm *bf_compile_file(const char* filename)
 {
     bf_state *state = bf_create_state();
-    bf_state_init(state); // TODO: error handling
+    bf_state_init(state);
     bf_state_read(state, filename);
     bf_program* program = bf_compile_state(state);
     //bf_optimize_program(program);
